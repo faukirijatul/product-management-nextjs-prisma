@@ -18,7 +18,7 @@ export default function HomeContainer({ initialProducts }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="relative h-[70vh] min-h-[500px] w-full overflow-hidden">
+      <section className="relative h-[90vh] min-h-[700px] w-full overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1645454410409-4239be595387?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -33,13 +33,13 @@ export default function HomeContainer({ initialProducts }: Props) {
 
         <div className="relative z-10 container mx-auto h-full px-4 flex flex-col justify-center items-center text-center text-white">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 drop-shadow-2xl leading-tight max-w-4xl">
-            Temukan Kebutuhanmu dengan Mudah & Cepat
+            Kelola Produk Lebih Mudah
             <br />
-            <span className="text-primary">Produk Terbaik, Harga Terjangkau</span>
+            <span className="text-primary">Manajemen Produk yang Efisien</span>
           </h1>
 
           <p className="text-lg md:text-xl mb-10 max-w-2xl drop-shadow-lg">
-            Jelajahi ribuan produk berkualitas dari berbagai kategori favoritmu hanya dalam satu tempat.
+            Kelola produk secara efisien dalam satu platform.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5">
@@ -67,7 +67,8 @@ export default function HomeContainer({ initialProducts }: Props) {
               Produk Unggulan
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Pilihan terbaik dari katalog kami yang selalu update dengan produk terbaru dan terlaris
+              Pilihan terbaik dari katalog kami yang selalu update dengan produk
+              terbaru dan terlaris
             </p>
           </div>
 
@@ -141,7 +142,7 @@ export default function HomeContainer({ initialProducts }: Props) {
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary/10 text-primary font-semibold rounded-xl hover:bg-primary/20 transition border border-primary/30"
             >
               Lihat Semua Produk
-              < ArrowRight size={16} />
+              <ArrowRight size={16} />
             </Link>
           </div>
         </div>
