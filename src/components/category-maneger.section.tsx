@@ -1,13 +1,27 @@
 "use client";
 
-import React, { useEffect, FormEvent } from "react";
+import React, { useEffect, FormEvent, useState } from "react";
 import { Plus, Edit2, Trash2, X, Save, Loader2 } from "lucide-react";
 import { Category } from "@/redux/types";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { addCategory, removeCategory, setCategories, setCategoryError, setCategoryLoading, updateCategoryAction } from "@/redux/actions/categoryActions";
-import { createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category.service";
+import {
+  addCategory,
+  removeCategory,
+  setCategories,
+  setCategoryError,
+  setCategoryLoading,
+  updateCategoryAction,
+} from "@/redux/actions/categoryActions";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "@/services/category.service";
+import { toast } from "react-toastify";
+import ConfirmDeleteModal from "./confirm-delete.modal";
 
 type Props = {
   isOpen: boolean;
@@ -20,10 +34,14 @@ const CategoryManagerSection = ({ isOpen, setIsOpen }: Props) => {
   const { categories, loading, error } = useSelector(
     (state: RootState) => state.categories,
   );
-  
-  const [newCategoryName, setNewCategoryName] = React.useState("");
-  const [editingId, setEditingId] = React.useState<string | null>(null);
-  const [editName, setEditName] = React.useState("");
+
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,17 +94,26 @@ const CategoryManagerSection = ({ isOpen, setIsOpen }: Props) => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Yakin ingin menghapus?")) return;
+  const handleDelete = (id: string) => {
+    setCategoryToDelete(id);
+    setDeleteModalOpen(true);
+  };
 
+  const confirmDeleteCategory = async () => {
+    if (!categoryToDelete) return;
+    setIsDeleting(true);
     dispatch(setCategoryLoading(true));
     try {
-      await deleteCategory(id);
-      dispatch(removeCategory(id));
+      await deleteCategory(categoryToDelete);
+      dispatch(removeCategory(categoryToDelete));
+      toast.success("Kategori berhasil dihapus");
     } catch (err) {
       console.error("Error deleting category:", err);
-      dispatch(setCategoryError("Gagal menghapus kategori"));
+      toast.error("Gagal menghapus kategori");
     } finally {
+      setIsDeleting(false);
+      setDeleteModalOpen(false);
+      setCategoryToDelete(null);
       dispatch(setCategoryLoading(false));
     }
   };
@@ -219,6 +246,21 @@ const CategoryManagerSection = ({ isOpen, setIsOpen }: Props) => {
               </button>
             </div>
           </div>
+
+          <ConfirmDeleteModal
+            isOpen={deleteModalOpen}
+            onClose={() => {
+              setDeleteModalOpen(false);
+              setCategoryToDelete(null);
+            }}
+            onConfirm={confirmDeleteCategory}
+            title="Hapus Kategori"
+            message="Apakah Anda yakin ingin menghapus kategori ini?"
+            itemName={
+              categories.find((c) => c.id === categoryToDelete)?.name || ""
+            }
+            loading={isDeleting}
+          />
         </div>
       )}
     </>
