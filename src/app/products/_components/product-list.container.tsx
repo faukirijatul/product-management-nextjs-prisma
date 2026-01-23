@@ -32,6 +32,9 @@ import {
   Trash2,
 } from "lucide-react";
 import Image from "next/image";
+import { useDebounce } from "@/hooks/useDebounce";
+import { toast } from "react-toastify";
+import ConfirmDeleteModal from "@/components/confirm-delete.modal";
 
 const ProductListContainer = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -48,6 +51,12 @@ const ProductListContainer = () => {
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const limit = 18;
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
@@ -71,7 +80,7 @@ const ProductListContainer = () => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
-        ...(search && { search }),
+        ...(debouncedSearch && { search: debouncedSearch }),
         ...(categoryId && { categoryId }),
         sortBy,
         sortOrder,
@@ -86,30 +95,38 @@ const ProductListContainer = () => {
     } finally {
       dispatch(setProductLoading(false));
     }
-  }, [dispatch, page, search, categoryId, sortBy, sortOrder]);
+  }, [dispatch, page, debouncedSearch, categoryId, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchProductsData();
   }, [fetchProductsData]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Yakin ingin menghapus produk ini?")) return;
+    setProductToDelete(id);
+    setDeleteModalOpen(true);
+  };
 
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+    setIsDeleting(true);
     try {
-      await deleteProduct(id);
-      dispatch(removeProduct(id));
+      await deleteProduct(productToDelete);
+      dispatch(removeProduct(productToDelete));
       fetchProductsData();
-      alert("Produk berhasil dihapus");
+      toast.success("Produk berhasil dihapus");
     } catch (err) {
       console.error(err);
-      alert("Gagal menghapus produk");
+      toast.error("Gagal menghapus produk");
+    } finally {
+      setIsDeleting(false);
+      setDeleteModalOpen(false);
+      setProductToDelete(null);
     }
   };
 
   useEffect(() => {
     setPage(1);
   }, [search, categoryId, sortBy, sortOrder]);
-
 
   return (
     <div className="min-h-screen bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8">
@@ -205,23 +222,22 @@ const ProductListContainer = () => {
                 key={product.id}
                 className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full"
               >
-                <div className="relative h-48 bg-gray-100">
+                <div className="relative aspect-square">
                   {product.imageUrl ? (
                     <Image
                       src={product.imageUrl}
                       alt={product.name}
                       fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition duration-300"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400">
-                      No Image
+                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+                      Tidak ada gambar
                     </div>
                   )}
 
                   {product.discount > 0 && (
-                    <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">
+                    <div className="absolute top-3 left-3 bg-error text-white px-2.5 py-1 rounded-lg text-sm font-bold shadow-sm">
                       {product.discount}% OFF
                     </div>
                   )}
@@ -320,6 +336,19 @@ const ProductListContainer = () => {
           </div>
         )}
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Hapus Produk"
+        message="Apakah Anda yakin ingin menghapus produk ini?"
+        itemName={products.find((p) => p.id === productToDelete)?.name || ""}
+        loading={isDeleting}
+      />
     </div>
   );
 };

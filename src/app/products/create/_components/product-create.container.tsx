@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Upload, X } from "lucide-react";
+import { ChevronDown, Upload, X } from "lucide-react";
 import CategoryManagerSection from "@/components/category-maneger.section";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,8 @@ import {
   updateProductService,
 } from "@/services/product.service";
 import { Product } from "@/redux/types";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function TambahProdukBaru({ id }: { id: string | null }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -96,11 +98,11 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
 
   const handleFile = useCallback((uploadedFile: File) => {
     if (!uploadedFile.type.startsWith("image/")) {
-      alert("File harus berupa gambar");
+      toast.error("File harus berupa gambar");
       return;
     }
     if (uploadedFile.size > 5 * 1024 * 1024) {
-      alert("Ukuran maksimal 5MB");
+      toast.error("Ukuran maksimal 5MB");
       return;
     }
 
@@ -141,7 +143,7 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
     e.preventDefault();
 
     if (!name || !price || !stock || !categoryId) {
-      alert("Harap isi semua field yang wajib");
+      toast.error("Harap isi semua field yang wajib");
       return;
     }
 
@@ -171,7 +173,7 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
         dispatch(addProduct(updatedOrNewProduct));
       }
 
-      alert(
+      toast.success(
         isEditMode
           ? "Produk berhasil diperbarui!"
           : "Produk berhasil ditambahkan!",
@@ -188,7 +190,7 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
       }
     } catch (err) {
       console.error("Error submitting form:", err);
-      alert("Terjadi kesalahan");
+      toast.error("Terjadi kesalahan");
     } finally {
       dispatch(setProductLoading(false));
     }
@@ -323,17 +325,7 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
                 ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                <svg
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <ChevronDown className="h-5 w-5" />
               </div>
             </div>
             <button
@@ -416,7 +408,7 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
             </div>
           </div>
 
-          <div className="pt-6">
+          <div className="pt-6 flex gap-5">
             <button
               type="submit"
               disabled={productLoading}
@@ -425,6 +417,13 @@ export default function TambahProdukBaru({ id }: { id: string | null }) {
             >
               {productLoading ? "Menyimpan..." : buttonText}
             </button>
+
+            <Link
+              href="/products"
+              className="w-full md:w-auto px-10 py-4 bg-gray-100 text-gray-600 border border-gray-300 font-semibold rounded-xl transition shadow-lg hover:bg-gray-200"
+            >
+              Kembali
+            </Link>
           </div>
         </form>
       </div>
