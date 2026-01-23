@@ -24,6 +24,8 @@ import {
 } from "@/services/product.service";
 import Link from "next/link";
 import {
+  ArrowDown,
+  ArrowUp,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -128,6 +130,26 @@ const ProductListContainer = () => {
     setPage(1);
   }, [search, categoryId, sortBy, sortOrder]);
 
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setSortOrder("desc");
+    }
+  };
+
+  const renderSortIcon = (field: string) => {
+    if (sortBy !== field)
+      return <ArrowUp size={16} className="text-gray-300" />;
+
+    return sortOrder === "asc" ? (
+      <ArrowUp size={16} className="text-primary" />
+    ) : (
+      <ArrowDown size={16} className="text-primary" />
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -146,8 +168,8 @@ const ProductListContainer = () => {
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-3 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
             <div className="relative">
               <input
                 type="text"
@@ -174,29 +196,25 @@ const ProductListContainer = () => {
               </select>
             </div>
 
-            <div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all appearance-none bg-white"
-              >
-                <option value="createdAt">Tanggal Dibuat</option>
-                <option value="name">Nama Produk</option>
-                <option value="price">Harga</option>
-                <option value="stock">Stok</option>
-                <option value="category.name">Kategori</option>
-              </select>
-            </div>
-
-            <div>
-              <select
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all appearance-none bg-white"
-              >
-                <option value="desc">Terbaru ke Terlama</option>
-                <option value="asc">Terlama ke Terbaru</option>
-              </select>
+            <div className="md:col-span-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {[
+                  { label: "Terbaru", value: "createdAt" },
+                  { label: "Nama", value: "name" },
+                  { label: "Harga", value: "price" },
+                  { label: "Stok", value: "stock" },
+                  { label: "Kategori", value: "category.name" },
+                ].map((item) => (
+                  <div
+                    key={item.value}
+                    onClick={() => handleSort(item.value)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer transition ${sortBy === item.value ? "border-primary bg-primary/5 text-primary" : "border-gray-300 hover:bg-gray-50"}`}
+                  >
+                    <span className="font-medium text-sm">{item.label}</span>
+                    {renderSortIcon(item.value)}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

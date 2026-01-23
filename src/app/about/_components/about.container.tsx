@@ -19,17 +19,16 @@ type Props = {
 export default function AboutContainer({ companyInfo }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 py-12 md:py-16">
-      <div className="container mx-auto px-4 max-w-5xl">\
+      <div className="container mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-text mb-4">
             Tentang {companyInfo.name}
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Kami hadir untuk mempermudah kehidupan sehari-hari Anda dengan
-            produk berkualitas dan pelayanan terbaik.
+            Platform untuk membantu Anda mengelola produk secara terstruktur,
+            efisien, dan mudah digunakan.
           </p>
         </div>
-
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 mb-16">
           <div>
             <h2 className="text-2xl font-bold mb-6 text-text">Siapa Kami?</h2>
@@ -37,9 +36,9 @@ export default function AboutContainer({ companyInfo }: Props) {
               {companyInfo.description}
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Didirikan pada tahun 2023, {companyInfo.name} terus berkembang
-              menjadi salah satu platform e-commerce terpercaya di Indonesia
-              dengan ribuan produk dari berbagai kategori.
+              Platform ini dirancang untuk membantu pengelolaan data produk,
+              kategori, stok, harga, dan diskon dalam satu sistem terpusat yang
+              mudah dioperasikan.
             </p>
           </div>
 
@@ -93,15 +92,14 @@ export default function AboutContainer({ companyInfo }: Props) {
             </div>
           </div>
         </div>
-
         <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100">
           <div className="p-8 md:p-10 text-center border-b border-gray-100">
             <h2 className="text-2xl md:text-3xl font-bold text-text mb-3">
-              Kenali Kami Lebih Dekat
+              Kenali Platform Lebih Dekat
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Tonton video singkat kami untuk melihat lebih banyak tentang
-              cerita, tim, dan komitmen kami kepada pelanggan.
+              Tonton video singkat untuk memahami fitur, alur kerja, dan manfaat
+              penggunaan platform ini dalam pengelolaan produk.
             </p>
           </div>
 
@@ -110,17 +108,16 @@ export default function AboutContainer({ companyInfo }: Props) {
               width="100%"
               height="100%"
               src={companyInfo.youtubeEmbedUrl}
-              title="Video Profil TokoKita"
+              title="Video Profil"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
           </div>
         </div>
-
         <div className="text-center mt-16">
           <p className="text-gray-600 mb-6 text-lg">
-            Punya pertanyaan? Jangan ragu untuk menghubungi kami kapan saja.
+            Butuh bantuan atau informasi lebih lanjut? Kami siap membantu Anda.
           </p>
           <a
             href={`mailto:${companyInfo.email}`}
