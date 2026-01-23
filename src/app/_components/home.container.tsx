@@ -77,7 +77,7 @@ export default function HomeContainer({ initialProducts }: Props) {
               Belum ada produk yang tersedia saat ini...
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {productsWithDiscount.map((product) => {
                 const hasDiscount = product.discount > 0;
 
