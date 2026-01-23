@@ -9,7 +9,7 @@ export default function AboutPage() {
       "Bogor, Jawa Barat, Indonesia",
     phone: "087845352397",
     email: "faukirijatul42@gmail.com",
-    youtubeEmbedUrl: "https://www.youtube.com/embed/1H2tqKyfhXc",
+    youtubeEmbedUrl: "https://www.youtube.com/embed/axnYPiYT95E",
   };
 
   return <AboutContainer companyInfo={companyInfo} />;
