@@ -19,7 +19,7 @@ type Props = {
 export default function AboutContainer({ companyInfo }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 py-12 md:py-16">
-      <div className="max-w-7xl mx-auto">
+      <div className="container mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-text mb-4">
             Tentang {companyInfo.name}
